@@ -1,18 +1,16 @@
-import { useState } from 'react'
 
-import './App.css'
-import {Button} from "@nextui-org/react";
+// import './App.css'
+import { UserHome } from './assets/components/UserHome'
+
 
 function App() {
   
 
   return (
     <>
-      <div>
-      <Button color="primary" variant="flat">
-        Flat
-      </Button> 
-       </div>
+      
+     <UserHome />
+     
     </>
   )
 }
