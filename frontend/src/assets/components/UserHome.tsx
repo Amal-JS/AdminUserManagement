@@ -5,7 +5,7 @@ export const UserHome = ()=>{
     return (
         <>
         <div className="relative">
-        <Button color="danger" className="absolute right-10 top-3" variant="bordered" startContent={<FaUser />}>
+        <Button color="danger" className="absolute right-10 top-3 hover:bg-white" variant="bordered" startContent={<FaUser />}>
         Logout
       </Button>
         </div>
@@ -16,7 +16,7 @@ export const UserHome = ()=>{
             <div className="h-full w-4/12 p-2">
 
             <img className="object-contain h-64 w-96  shadow-gray-500 shadow-2xl mb-3" src="https://m.media-amazon.com/images/W/MEDIAX_792452-T2/images/I/41k0KglsbIL._SX300_SY300_QL70_FMwebp_.jpg"/>
-            <button type="button" className="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm p-2  text-center me-2 w-full">Change picture</button>
+            <button type="button" className="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm p-2  text-center  w-full">Change picture</button>
             </div>
 
 

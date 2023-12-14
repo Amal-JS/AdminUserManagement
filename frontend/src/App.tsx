@@ -1,6 +1,8 @@
 
 // import './App.css'
-import { UserHome } from './assets/components/UserHome'
+
+import { Index } from './assets/components/Index'
+
 
 
 function App() {
@@ -8,9 +10,7 @@ function App() {
 
   return (
     <>
-      
-     <UserHome />
-     
+<Index />
     </>
   )
 }
