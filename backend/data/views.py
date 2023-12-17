@@ -38,6 +38,18 @@ class UserViewSets(viewsets.ModelViewSet):
             
             return Response({'validUser':False})
     
+    def destroy(self, request, *args, **kwargs):
+         username = request.GET.get('username',None)
+
+         if username is not None:
+            try:
+                   user = CustomUser.objects.get(username=username)
+                   user.delete()
+                   return Response({'userDeleted':True})
+            except CustomUser.DoesNotExist:
+                 return Response({'userDeleted':False})
+         return Response({'userDeleted':False})
+    
 
 
 
