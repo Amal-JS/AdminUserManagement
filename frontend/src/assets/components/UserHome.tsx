@@ -1,11 +1,41 @@
 import {Button} from "@nextui-org/react";
+import { useEffect ,  } from "react";
 import { FaUser } from "react-icons/fa";
 
+import { useNavigate } from "react-router-dom";
+
+type accessTokenDemo = string | null;   
+
 export const UserHome = ()=>{
+
+    const navigate = useNavigate()
+
+    useEffect(()=>{
+        const accessToken : accessTokenDemo= localStorage.getItem('accessToken') 
+        
+        if (accessToken){
+           
+            //get the user details with the access token 
+            //set the username in the local storage
+            localStorage.setItem('username','amaljs')
+        }
+        else{
+            
+            //navigate to user login 
+            navigate('/userLogin')
+        }
+    })
+
+    const handleLogout =() : void =>{
+
+        //clear the username and accessToken from the local storage
+        localStorage.removeItem('username')
+        console.log('removed the username')
+    }
     return (
         <>
         <div className="relative">
-        <Button color="danger" className="absolute right-10 top-3 hover:bg-white" variant="bordered" startContent={<FaUser />}>
+        <Button color="danger" className="absolute right-10 top-3 hover:bg-white" variant="bordered" startContent={<FaUser />} onClick={handleLogout}>
         Logout
       </Button>
         </div>

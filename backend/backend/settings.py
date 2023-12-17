@@ -147,7 +147,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'data.CustomUser'
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # Replace with the origin of your React app
+    "http://localhost:5173",  # Replace with the origin of your React app
 ]
 
 CORS_ALLOW_ALL_METHODS = True

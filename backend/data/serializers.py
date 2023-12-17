@@ -15,6 +15,7 @@ class CustomTokenObtainPairSerilizer(TokenObtainPairSerializer):
 
         # Include the username in the response data
         data['username'] = self.user.username
+        data['isSuperUser'] = self.user.is_superuser
         print(f'data form the serilizer : ',data)
 
         return data
