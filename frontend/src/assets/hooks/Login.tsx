@@ -3,14 +3,23 @@ import {  toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from 'axios'
 import { LoginUrl } from '../../configs/url';
+import { useNavigate } from 'react-router';
 
 
 type UserData = string; // username and password string
 
+type userDetailsType = {
+    refresh : string,
+    access : string,
+    username : string,
+    isSuperUser : boolean
+}
 
 export const LoginHook = ()=>{
+
                 const [userName,setUsername] = useState<UserData>('')
                 const [password,setPassword] = useState<UserData>('')
+                const navigate = useNavigate()
 
                 const FormFieldsEmptyCheck = (): boolean => {
 
@@ -34,19 +43,23 @@ export const LoginHook = ()=>{
 
                   };
 
-                  const handleSubmit = () => {
+                  const handleSubmit = (userType : string = 'user') => {
+
                     const fieldCheck = FormFieldsEmptyCheck()
+                  
                     if (fieldCheck){
-                            loginHandle()
+                            loginHandle(userType)
 
                     }
                     else{
-                        console.log('field empty');
+                       return ;
                         
                     }
                   }
 
-                  const loginHandle = (userType : string = 'user')=>{
+                  const loginHandle = (userType : string)=>{
+
+                    let userDetails : userDetailsType;
 
                     const userCheck = async () =>{
 
@@ -61,6 +74,7 @@ export const LoginHook = ()=>{
                          
                                     if (userExist.data){
                                         console.log(userExist.data)
+                                        userDetails = userExist.data;
                                     }
 
                         }catch (error) {
@@ -79,27 +93,74 @@ export const LoginHook = ()=>{
 
 
                         }
-                    
-                   
-
                  
-                     
                         //check the user is valid 
                         if (userType == 'user'){
 
-                            
+                            //Empty the fields
+                            setUsername('')
+                            setPassword('')
+
+                            console.log('user block')
+
+                            toast.success("Login successfull.", {
+                                position: "top-right",
+                                autoClose: 5000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: "colored",
+                              });
+
+                         
+
+                            navigate('/userHome')
 
                         }else{
-    
+
+                            if (userDetails.isSuperUser){
+
+                                //Empty the fields
+                                setUsername('')
+                                setPassword('')
+
+                                toast.success("Login successfull.", {
+                                    position: "top-right",
+                                    autoClose: 5000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    theme: "colored",
+                                  });
+
+                                console.log('admin block')
+
+                                navigate('/admin')
+                            }
+                            else{
+
+                                toast.error("You don't have nessassary permissions. ", {
+                                    position: "top-right",
+                                    autoClose: 5000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    theme: "colored",
+                                  });
+
+                            }
+                            
                         }
                         //check user type if user add to local storage or cookie
                         //if admin check the admin type if not toast no permission to access it
                         //then in the local storage add the username and 
                         //store the refresh token and access token
-
-
-
-                    
 
                     }
                     userCheck()
