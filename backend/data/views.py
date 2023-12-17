@@ -3,6 +3,8 @@ from rest_framework import viewsets
 from . models import CustomUser
 from . serializers import UserSerializer
 from rest_framework.response import Response
+from rest_framework_simplejwt.views import TokenObtainPairView
+from . serializers import CustomTokenObtainPairSerilizer
 
 
 class UserViewSets(viewsets.ModelViewSet):
@@ -37,3 +39,7 @@ class UserViewSets(viewsets.ModelViewSet):
             return Response({'validUser':False})
     
 
+
+
+class  CustomTokenObtainPairView(TokenObtainPairView):
+     serializer_class = CustomTokenObtainPairSerilizer
