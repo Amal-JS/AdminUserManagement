@@ -112,19 +112,22 @@ export const LoginHook = ()=>{
                                 draggable: true,
                                 progress: undefined,
                                 theme: "colored",
+                                onClose :()=>{
+                                    setTimeout(()=>{navigate('/')},1000)
+                                }
                               });
 
                          
 
-                            navigate('/userHome')
+                         
 
                         }else{
 
                             if (userDetails.isSuperUser){
 
                                 //Empty the fields
-                                setUsername('')
-                                setPassword('')
+                                // setUsername('')
+                                // setPassword('')
 
                                 toast.success("Login successfull.", {
                                     position: "top-right",
@@ -135,11 +138,17 @@ export const LoginHook = ()=>{
                                     draggable: true,
                                     progress: undefined,
                                     theme: "colored",
-                                  });
+                                    onClose: () => {
+                                        setTimeout(() => {
+                                          navigate('/admin'); // Navigate after a slight delay
+                                        }, 1000); // Adjust the delay time as needed
+                                      },
+                                    });
+                               
 
                                 console.log('admin block')
 
-                                navigate('/admin')
+                              
                             }
                             else{
 
