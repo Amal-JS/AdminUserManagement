@@ -73,27 +73,25 @@ export const LoginHook = ()=>{
                             const userExist = await axios.post(LoginUrl,data)
                          
                                     if (userExist.data){
+
+                                        if (userExist.data.detail === 'No active account found with the given credentials')
+                                        {
+                                            toast.error("Wrong Credentials. No user ", {
+                                                position: "top-right",
+                                                autoClose: 5000,
+                                                hideProgressBar: false,
+                                                closeOnClick: true,
+                                                pauseOnHover: true,
+                                                draggable: true,
+                                                progress: undefined,
+                                                theme: "colored",
+                                              });
+                                            return ;
+                                        }
+
                                         console.log(userExist.data)
                                         userDetails = userExist.data;
-                                    }
 
-                        }catch (error) {
-
-                            
-                            toast.error("Wrong Credentials. No user ", {
-                                position: "top-right",
-                                autoClose: 5000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                theme: "colored",
-                              });
-
-
-                        }
-                 
                         //check the user is valid 
                         if (userType == 'user'){
 
@@ -113,7 +111,7 @@ export const LoginHook = ()=>{
                                 progress: undefined,
                                 theme: "colored",
                                 onClose :()=>{
-                                    setTimeout(()=>{navigate('/')},1000)
+                                    setTimeout(()=>{navigate('/')},2000)
                                 }
                               });
 
@@ -141,7 +139,7 @@ export const LoginHook = ()=>{
                                     onClose: () => {
                                         setTimeout(() => {
                                           navigate('/admin'); // Navigate after a slight delay
-                                        }, 1000); // Adjust the delay time as needed
+                                        }, 2000); // Adjust the delay time as needed
                                       },
                                     });
                                
@@ -171,6 +169,26 @@ export const LoginHook = ()=>{
                         //then in the local storage add the username and 
                         //store the refresh token and access token
 
+                                    }
+
+                        }catch (error) {
+
+                            console.log(error)
+                            toast.error("Wrong Credentials. No user ", {
+                                position: "top-right",
+                                autoClose: 5000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: "colored",
+                              });
+
+
+                        }
+                 
+                       
                     }
                     userCheck()
 

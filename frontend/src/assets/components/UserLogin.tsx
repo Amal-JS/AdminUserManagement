@@ -1,6 +1,6 @@
 import { Image } from "@nextui-org/react";
 import logoImage from "../static/login_icon.png";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { LoginHook } from "../hooks/Login";
 

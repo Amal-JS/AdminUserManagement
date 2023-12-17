@@ -8,23 +8,23 @@ type accessTokenDemo = string | null;
 
 export const UserHome = ()=>{
 
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
 
-    useEffect(()=>{
-        const accessToken : accessTokenDemo= localStorage.getItem('accessToken') 
+    // useEffect(()=>{
+    //     const accessToken : accessTokenDemo= localStorage.getItem('accessToken') 
         
-        if (accessToken){
+    //     if (accessToken){
            
-            //get the user details with the access token 
-            //set the username in the local storage
-            localStorage.setItem('username','amaljs')
-        }
-        else{
+    //         //get the user details with the access token 
+    //         //set the username in the local storage
+    //         localStorage.setItem('username','amaljs')
+    //     }
+    //     else{
             
-            //navigate to user login 
-            navigate('/userLogin')
-        }
-    })
+    //         //navigate to user login 
+    //         navigate('/userLogin')
+    //     }
+    // })
 
     const handleLogout =() : void =>{
 
