@@ -1,6 +1,8 @@
+from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework import viewsets
 from . models import CustomUser
+from django.contrib.auth.hashers import make_password
 from . serializers import UserSerializer
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -14,8 +16,14 @@ class UserViewSets(viewsets.ModelViewSet):
 
 
     def create(self,request):
-
-        serializer = UserSerializer(data = request.data)
+        
+        data = {
+             'username' : request.data['username'],
+             'email': request.data['email'],
+             'password':make_password(request.data['password']),
+             'phone':request.data['phone']
+        }
+        serializer = UserSerializer(data = data)
         if serializer.is_valid():
             serializer.save()
        
@@ -35,9 +43,10 @@ class UserViewSets(viewsets.ModelViewSet):
                      'username':user.username,
                      'email':user.email,
                      'phone':user.phone,
-                     'image':user.image if user.image else '',
+                     'image':user.image.url if user.image else '',
 
                 }
+                print(userData['image'])
                 return Response({'userData':userData})
             
             except CustomUser.DoesNotExist:
@@ -45,7 +54,7 @@ class UserViewSets(viewsets.ModelViewSet):
             
            
     
-    def destroy(self, request, *args, **kwargs):
+    def destroy(self, request,pk=None, *args, **kwargs):
          username = request.GET.get('username',None)
 
          if username is not None:
@@ -57,44 +66,41 @@ class UserViewSets(viewsets.ModelViewSet):
                  return Response({'userDeleted':False})
          return Response({'userDeleted':False})
     
-    def partial_update(self,request):
-
+    def update(self,request,pk=None, *args, **kwargs):
+        
+        print('partial method call')
         #want to get the image like this
         image_file = request.FILES.get('image',None)
-        
-        # Extract other fields from request.data
+  
         user = request.data.get('user')
-        username = request.data.get('username',user.username)
-        password = request.data.get('password',user.password)
-        email = request.data.get('email',user.email)
-        phone = request.data.get('phone',user.phone)
-        
 
         try:
              user = CustomUser.objects.get(username=user)
+             print(f"user before update : {user}")
+             # Extract other fields from request.data
+             username = request.data.get('username',user.username)
+             password = request.data.get('password',None)
+             email = request.data.get('email',user.email)
+             phone = request.data.get('phone',user.phone)
         except:
              
                 pass
         # Create a dictionary with the extracted data
-
-        if image_file is not None:
-            data = {
+        
+        data = {
                 'username':username,
                 'phone':phone,
                 'email':email,
-                'password':password,
-                
-            }
-        else:
-             data ={
-                  'image':image_file
-             }
-
+                'password':make_password(password) if password is not None else user.password,
+                'image':image_file if image_file is not None else ''
+          }
+        print(data)
         # Pass the data to the serializer
-        serializer = UserSerializer(instance=user,data=data,partial=True)
+        serializer = UserSerializer(instance=user,data=data)
+
         if serializer.is_valid():
             serializer.save()
-       
+            print(f"user after update : {user}")
             
             return Response({'userUpdated':True})
         else:

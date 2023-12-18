@@ -5,9 +5,10 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):
+   
     class Meta:
         model = CustomUser
-        fields = ['username','phone','email','password']
+        fields = ['username','phone','email','password','image']
 
 class CustomTokenObtainPairSerilizer(TokenObtainPairSerializer):
     def validate(self, attrs):

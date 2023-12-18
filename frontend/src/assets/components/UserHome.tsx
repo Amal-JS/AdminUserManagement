@@ -1,9 +1,9 @@
 import {Button} from "@nextui-org/react";
-import { useEffect , useState } from "react";
+import { useEffect , useState , useRef} from "react";
 import { FaUser } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
-import {userDataUrl} from '../../configs/url'
+import {userDataUrl , userDataUpdateUrl} from '../../configs/url'
 
 type accessTokenDemo = string | null;   
 
@@ -18,26 +18,18 @@ export const UserHome = ()=>{
 
     const navigate = useNavigate()
     const [loggedUser,setLoggedUser] = useState< userData | null >(null)
+   
+    const fileInputRef = useRef<HTMLInputElement|null>(null)
 
-    useEffect(()=>{
-        const userInLocalStorage : accessTokenDemo= localStorage.getItem('user') 
-        
+    const userInLocalStorage : accessTokenDemo= localStorage.getItem('user') 
+
+    useEffect(()=>{    
         if (userInLocalStorage){
-           
             //get the user details with the access token 
             //set the username in the local storage
-
-
-            const getUserData = async () => {
-            
-                const data = await axios.get(userDataUrl+`?username=${'third'}`)
-                setLoggedUser(data.data.userData)
-            }
-            getUserData()
-            
+            getUserData()  
         }
         else{
-            
             //navigate to user login 
             navigate('/userLogin')
         }
@@ -45,6 +37,14 @@ export const UserHome = ()=>{
        
 
     },[loggedUser?.username])
+
+    
+    const getUserData = async () => {
+            
+        const data = await axios.get(userDataUrl+`?username=${userInLocalStorage}`)
+        setLoggedUser(data.data.userData)
+    }
+
 
     const handleLogout =() : void =>{
 
@@ -57,6 +57,33 @@ export const UserHome = ()=>{
         navigate('/userLogin')
         
     }
+
+    const handleImageClick = ()=>{
+        fileInputRef.current.click()
+    }
+    const handleImageInput = (evt : React.ChangeEvent<HTMLInputElement> )=>{
+        const selectedFile = evt.target.files[0]
+        
+        const data = new FormData();
+  data.append('user', loggedUser?.username);
+  data.append('image', selectedFile);
+
+        
+        axios.put(userDataUpdateUrl,data,{
+            headers: {
+                "Content-Type": "multipart/form-data",
+              }
+        })
+        .then((res)=>{
+            console.log(res)
+            getUserData()
+        }
+            )
+        .catch((err)=>console.log(err))
+      
+        
+    }
+
 
     return (
         <>
@@ -71,8 +98,9 @@ export const UserHome = ()=>{
         <div className=" border-cyan-500  shadow-2xl p-1 my-24 w-9/12 flex h-full">
             <div className="h-full w-4/12 p-2">
 
-            <img className="object-contain h-64 w-96  shadow-gray-500 shadow-2xl mb-3" src={loggedUser?.image ? loggedUser?.image : "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/480px-User-avatar.svg.png"}/>
-            <button type="button" className="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm p-2  text-center  w-full">Change picture</button>
+            <img className="object-contain h-64 w-96  shadow-gray-500 shadow-2xl mb-3" src={loggedUser?.image ? `http://127.0.0.1:8000${loggedUser?.image}` : "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/480px-User-avatar.svg.png"}/>
+            <button onClick={handleImageClick} type="button" className="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm p-2  text-center  w-full">Change picture</button>
+            <input onChange={handleImageInput} type='file' className="invisible" name='image' accept=".jpeg , .jpg , .png" ref={fileInputRef}></input>
             </div>
 
 
