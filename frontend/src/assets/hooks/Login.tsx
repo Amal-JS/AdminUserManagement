@@ -20,7 +20,7 @@ export const LoginHook = ()=>{
                 const [userName,setUsername] = useState<UserData>('')
                 const [password,setPassword] = useState<UserData>('')
                 const navigate = useNavigate()
-
+              
                 const FormFieldsEmptyCheck = (): boolean => {
 
                     if (userName == "" || password == "") {
@@ -111,12 +111,16 @@ export const LoginHook = ()=>{
                                 progress: undefined,
                                 theme: "colored",
                                 onClose :()=>{
+                                    
                                     setTimeout(()=>{navigate('/')},2000)
                                 }
                               });
 
-                         
+                         //save the username tokens in the local storage,
 
+                         localStorage.setItem('accessToken',userDetails.access)
+                         localStorage.setItem('refreshToken',userDetails.refresh)
+                         localStorage.setItem('user',userDetails.username)
                          
 
                         }else{
@@ -144,7 +148,15 @@ export const LoginHook = ()=>{
                                     });
                                
 
+                                //
+
                                 console.log('admin block')
+
+                                //save the admin username tokens in the local storage,
+
+                         localStorage.setItem('accessToken',userDetails.access)
+                         localStorage.setItem('refreshToken',userDetails.refresh)
+                         localStorage.setItem('adminUser',userDetails.username)
 
                               
                             }
@@ -205,6 +217,7 @@ export const LoginHook = ()=>{
                     handlePassword,
                     handleUserName,
                     FormFieldsEmptyCheck,
-                    loginHandle
+                    loginHandle,
+                    
                   }
 }

@@ -1,37 +1,63 @@
 import {Button} from "@nextui-org/react";
-import { useEffect ,  } from "react";
+import { useEffect , useState } from "react";
 import { FaUser } from "react-icons/fa";
-
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
+import {userDataUrl} from '../../configs/url'
 
 type accessTokenDemo = string | null;   
 
+type userData = {
+    username:string,
+    phone : number,
+    email : string, 
+    image : string
+}
+
 export const UserHome = ()=>{
 
-    // const navigate = useNavigate()
+    const navigate = useNavigate()
+    const [loggedUser,setLoggedUser] = useState< userData | null >(null)
 
-    // useEffect(()=>{
-    //     const accessToken : accessTokenDemo= localStorage.getItem('accessToken') 
+    useEffect(()=>{
+        const userInLocalStorage : accessTokenDemo= localStorage.getItem('user') 
         
-    //     if (accessToken){
+        if (userInLocalStorage){
            
-    //         //get the user details with the access token 
-    //         //set the username in the local storage
-    //         localStorage.setItem('username','amaljs')
-    //     }
-    //     else{
+            //get the user details with the access token 
+            //set the username in the local storage
+
+
+            const getUserData = async () => {
             
-    //         //navigate to user login 
-    //         navigate('/userLogin')
-    //     }
-    // })
+                const data = await axios.get(userDataUrl+`?username=${'third'}`)
+                setLoggedUser(data.data.userData)
+            }
+            getUserData()
+            
+        }
+        else{
+            
+            //navigate to user login 
+            navigate('/userLogin')
+        }
+
+       
+
+    },[loggedUser?.username])
 
     const handleLogout =() : void =>{
 
         //clear the username and accessToken from the local storage
-        localStorage.removeItem('username')
-        console.log('removed the username')
+        localStorage.removeItem('user')
+        localStorage.removeItem('accessToken')
+        localStorage.removeItem('refreshToken')
+        setLoggedUser(null)
+        console.log('removed the user details from the local storage')
+        navigate('/userLogin')
+        
     }
+
     return (
         <>
         <div className="relative">
@@ -45,7 +71,7 @@ export const UserHome = ()=>{
         <div className=" border-cyan-500  shadow-2xl p-1 my-24 w-9/12 flex h-full">
             <div className="h-full w-4/12 p-2">
 
-            <img className="object-contain h-64 w-96  shadow-gray-500 shadow-2xl mb-3" src="https://m.media-amazon.com/images/W/MEDIAX_792452-T2/images/I/41k0KglsbIL._SX300_SY300_QL70_FMwebp_.jpg"/>
+            <img className="object-contain h-64 w-96  shadow-gray-500 shadow-2xl mb-3" src={loggedUser?.image ? loggedUser?.image : "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/480px-User-avatar.svg.png"}/>
             <button type="button" className="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm p-2  text-center  w-full">Change picture</button>
             </div>
 
@@ -58,9 +84,9 @@ export const UserHome = ()=>{
                 </div>
                  
                 <div className="w-6/12 b ">
-                <p className="text-xl font-normal  my-3 text-blue-600 underline">Amal</p>
-                <p className="text-sm text-red-600 font-normal  my-3">amalrandom@gmail.com</p>
-                <p className="text-sm text-black font-bold my-3">92020783020</p>
+                <p className="text-xl font-normal  my-3 text-blue-600 underline">{loggedUser?.username}</p>
+                <p className="text-sm text-red-600 font-normal  my-3">{loggedUser?.email}</p>
+                <p className="text-sm text-black font-bold my-3">{loggedUser?.phone}</p>
                 </div>
                 
             </div>

@@ -27,16 +27,23 @@ class UserViewSets(viewsets.ModelViewSet):
     def retrieve(self,request,pk=None):
            
             username=request.GET.get('username','') 
-            password= request.GET.get('password','') 
+            
             try:
                 user = CustomUser.objects.get(username=username)
-    
-                if user.password == password:
-                    return Response({'validUser':True,'username':username})
+                
+                userData={
+                     'username':user.username,
+                     'email':user.email,
+                     'phone':user.phone,
+                     'image':user.image if user.image else '',
+
+                }
+                return Response({'userData':userData})
+            
             except CustomUser.DoesNotExist:
                 return Response({'validUser':False})
             
-            return Response({'validUser':False})
+           
     
     def destroy(self, request, *args, **kwargs):
          username = request.GET.get('username',None)

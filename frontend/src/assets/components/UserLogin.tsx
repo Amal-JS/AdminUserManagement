@@ -3,9 +3,14 @@ import logoImage from "../static/login_icon.png";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { LoginHook } from "../hooks/Login";
+import { useEffect } from "react";
+import { useNavigate } from "react-router";
 
 
 export const UserLogin = () => {
+
+  const navigate = useNavigate()
+
 
   const {
     userName,
@@ -16,7 +21,11 @@ export const UserLogin = () => {
   }   = LoginHook()
 
   
-
+useEffect(()=>{
+if (('user' in localStorage) || ('Adminuser' in localStorage)){
+  navigate('/')
+}
+})
 
   return (
     <div className="h-full     mt-16 bg-gradient-to-r from-green-400 to-blue-500  ">
