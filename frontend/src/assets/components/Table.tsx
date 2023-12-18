@@ -1,6 +1,7 @@
 import * as React from "react";
 import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, getKeyValue , Tooltip } from "@nextui-org/react";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import { useNavigate } from "react-router";
 
 
 type UsersData = {
@@ -28,7 +29,7 @@ export default function CustomTable ({usersArray,handleDelete} : ParentComponent
   
 
   const [users,setUsers] = React.useState<DisplayedUserData[]>([])
-
+  const navigate = useNavigate()
 
  
 
@@ -89,7 +90,7 @@ export default function CustomTable ({usersArray,handleDelete} : ParentComponent
                {columnKey === 'actions' ? (
                  <div className="flex justify-evenly">
                    <Tooltip content="Edit user">
-                     <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                     <span className="text-lg text-default-400 cursor-pointer active:opacity-50" onClick={()=>navigate(`edit/${item.username}`)}>
                        <FaEdit />
                      </span>
                    </Tooltip>

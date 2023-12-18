@@ -13,7 +13,7 @@ export const Index =()=>{
                 <Route path='/' element={<UserHome/>}></Route>
                 <Route path='admin'>
                     <Route index element={<AdminHome />}/>
-                    <Route path="edit" element={<UserEdit/>}/>
+                    <Route path="edit/:username" element={<UserEdit/>}/>
                 </Route>
                 <Route path='/userLogin' element={<UserLogin/>}></Route>
                 <Route path='/adminLogin' element={<AdminLogin/>}></Route>
