@@ -2,11 +2,46 @@ import * as React from "react";
 import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, getKeyValue , Tooltip } from "@nextui-org/react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 
-const users =[{name:'richard',phone:'ceo',email:'active'},
-{name:'vishnu',phone:'manager',email:'vacation'}
-]
 
-export default function CustomTable() {
+type UsersData = {
+  username:string,
+  email : string,
+  phone : string,
+  password: string,
+  image : string | null
+  
+}
+
+type ParentComponentProps = {
+  usersArray : UsersData[] | null,
+  handleDelete : (username : string)=> void
+}
+
+type DisplayedUserData = Omit <UsersData , 'password' | 'image' >
+
+
+export default function CustomTable ({usersArray,handleDelete} : ParentComponentProps) {
+
+  if (!usersArray){
+    return ( <div>No users found</div>)
+  }
+  
+
+  const [users,setUsers] = React.useState<DisplayedUserData[]>([])
+
+
+ 
+
+
+  React.useEffect(() => {
+    
+    // Filter users based on conditions
+    setUsers(usersArray.map(({ image, password, ...rest }) => rest));
+    console.log('users from table ', users);
+  }, [usersArray, setUsers]);
+
+
+
   const [page, setPage] = React.useState(1);
   const rowsPerPage = 4;
 
@@ -17,6 +52,7 @@ export default function CustomTable() {
     const end = start + rowsPerPage;
 
     return users.slice(start, end);
+
   }, [page, users]);
 
   return (
@@ -40,14 +76,14 @@ export default function CustomTable() {
       }}
     >
       <TableHeader>
-        <TableColumn key="name">Username</TableColumn>
+        <TableColumn key="username">Username</TableColumn>
         <TableColumn key="phone">Phone</TableColumn>
         <TableColumn key="email">Email</TableColumn>
         <TableColumn key="actions">""</TableColumn>
       </TableHeader>
       <TableBody items={items}>
         {(item) => (
-           <TableRow key={item.name}>
+           <TableRow key={item.username}>
            {(columnKey) => (
              <TableCell>
                {columnKey === 'actions' ? (
@@ -58,7 +94,7 @@ export default function CustomTable() {
                      </span>
                    </Tooltip>
                    <Tooltip color="danger" content="Delete user">
-                     <span className="text-lg text-danger cursor-pointer active:opacity-50">
+                     <span className="text-lg text-danger cursor-pointer active:opacity-50" onClick={()=>{handleDelete(item.username)}}>
                        <FaTrash />
                      </span>
                    </Tooltip>

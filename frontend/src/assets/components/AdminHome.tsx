@@ -1,9 +1,64 @@
 import {Button} from "@nextui-org/react";
+import { useEffect , useState } from "react";
 import { FaUser } from "react-icons/fa";
 import CustomTable from "./Table";
+import { useNavigate } from "react-router";
+import axios from 'axios';
+import { allUserDataUrl , userDataUrl} from "../../configs/url";
 
+
+type UsersData = {
+            username:string,
+            email : string,
+            phone : string,
+            password: string,
+            image : string | null
+}[]
 
 export const AdminHome = ()=>{
+
+    const navigate = useNavigate()
+
+    const [users,setUsers] = useState<UsersData | null >(null)
+
+
+
+    
+    const getAllUsersData = async () => {
+        try {
+            const response = await axios.get(allUserDataUrl);
+            setUsers(response.data);
+          
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+        }
+    };
+
+
+    useEffect(()=>{
+
+        const adminUser = localStorage.getItem('adminUser')
+        
+        if (adminUser){
+
+            
+            getAllUsersData()
+
+        }else{
+            navigate('/adminLogin')
+        }
+
+    },[])
+
+    const handleDelete = (username : string) : void=> {
+      
+        axios.delete(userDataUrl+`?username=${username}`)
+        .then(res=>{ getAllUsersData() })
+        .catch(err=>console.log(err))        
+
+    }
+
+
     return (
         <>
     
@@ -46,7 +101,7 @@ table content */}
 <div className="mb-6 flex justify-center w-full  bg-white mt-6">
     
     <div className="w-[80%]   border-black shadow-2xl border-2 p-3  rounded-md ">
-            <CustomTable />
+            <CustomTable usersArray={users} handleDelete={handleDelete}/>
     </div>
 </div>
 

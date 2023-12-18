@@ -1,10 +1,13 @@
-import {Image} from "@nextui-org/react";
+import {Image, useNavbar} from "@nextui-org/react";
 import logoImage from '../static/admin_icon.png'
 import {LoginHook} from '../hooks/Login'
 import { ToastContainer } from "react-toastify";
+import { useEffect } from "react";
+import {useNavigate} from 'react-router-dom'
 
 export const AdminLogin = ()=>{
 
+    const navigate = useNavigate()
     const {
         userName,
         password,
@@ -15,7 +18,14 @@ export const AdminLogin = ()=>{
 
     }  =  LoginHook()
 
-    
+    useEffect(()=>{
+
+        const adminUser = localStorage.getItem('adminUser')
+        if (adminUser){
+            navigate('/admin')
+        }
+
+    },[])
 
     return(
         <div>

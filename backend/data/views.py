@@ -92,7 +92,7 @@ class UserViewSets(viewsets.ModelViewSet):
                 'phone':phone,
                 'email':email,
                 'password':make_password(password) if password is not None else user.password,
-                'image':image_file if image_file is not None else ''
+                'image':image_file if image_file is not None else user.image
           }
         print(data)
         # Pass the data to the serializer
