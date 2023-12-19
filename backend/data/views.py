@@ -68,23 +68,32 @@ class UserViewSets(viewsets.ModelViewSet):
     
     def update(self,request,pk=None, *args, **kwargs):
         
-        print('partial method call')
+        
         #want to get the image like this
         image_file = request.FILES.get('image',None)
   
         user = request.data.get('user')
 
+        
+        print(request.data)
         try:
              user = CustomUser.objects.get(username=user)
              print(f"user before update : {user}")
-             # Extract other fields from request.data
-             username = request.data.get('username',user.username)
-             password = request.data.get('password',None)
-             email = request.data.get('email',user.email)
-             phone = request.data.get('phone',user.phone)
-        except:
              
+        except Exception as e:
+                print(e)
                 pass
+        
+
+
+        # Extract other fields from request.data
+        username = request.data.get('username',user.username)
+        password = request.data.get('password',None)
+        email = request.data.get('email',user.email)
+        phone = request.data.get('phone',user.phone)
+
+
+
         # Create a dictionary with the extracted data
         
         data = {
@@ -92,9 +101,9 @@ class UserViewSets(viewsets.ModelViewSet):
                 'phone':phone,
                 'email':email,
                 'password':make_password(password) if password is not None else user.password,
-                'image':image_file if image_file is not None else user.image
+                'image':image_file if image_file else user.image if user.image else None
           }
-        print(data)
+        print(data,user.image)
         # Pass the data to the serializer
         serializer = UserSerializer(instance=user,data=data)
 

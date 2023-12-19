@@ -4,6 +4,7 @@ import { useParams } from "react-router";
 import { useEffect, useState } from "react";
 import axios from 'axios';
 import {userDataUrl} from '../../configs/url'
+import {useNavigate} from 'react-router-dom'
 
 type UserData = {
   username:string,
@@ -11,19 +12,27 @@ type UserData = {
   phone : string,
   password: string,
 
-}
+};
+
+type UserType = {user:string}
+
+type UserUpdatedData =  UserData & UserType;
 
 export const UserEdit = ()=>{
 
   const params = useParams()
-
+  const navigate = useNavigate()
+  
 
   const [user,setUser] = useState<UserData | null>(null)
-
+  const [username,setUsername] = useState('')
 
   useEffect(()=>{
     axios.get(userDataUrl+`?username=${params.username}`)
-    .then(res=>setUser(res.data.userData))
+    .then(res=>{
+      setUser(res.data.userData)
+      setUsername(params.username!)
+    })
     .catch(err=>console.log(err))
 
 
@@ -32,9 +41,7 @@ export const UserEdit = ()=>{
 
   const handleChange = (evt: React.ChangeEvent<HTMLInputElement>): void => {
     const {  value , name } = evt.target;
-    
-    console.log('value :',value)
-    console.log('Name:', name);
+   
 
 
 
@@ -52,10 +59,32 @@ export const UserEdit = ()=>{
       }
     
       return { ...prevUser, [propertyName]: value! };
-    });
+    }
+    );
 
 
   };
+
+
+  const handleUpdate = ()=>{
+    const data = user ;
+    
+  if (data !== null) {
+    // Create a new object with properties from UserData and UserType
+     const updatedData: UserUpdatedData = {
+      ...data,
+      user: username || '', // Set a default value if user?.username is null or undefined
+    };
+
+    axios.put(userDataUrl,updatedData).then(res=>{
+      console.log(res)
+      if (res.data.userUpdated){
+        navigate('/admin')
+      }
+    }).catch((err)=>console.log(err))
+
+
+  }}
     return(
         <div className="h-full     mt-16 bg-gradient-to-r from-green-400 to-blue-500  "> 
 
@@ -92,7 +121,7 @@ export const UserEdit = ()=>{
     <input type="password"  onChange={handleChange}   value={user?.password} name="password" className="bg-white border border-green-800 text-gray-900 text-sm rounded-lg focus:ring-blue-500  focus:outline-green-500 block w-full p-2.5 dark:bg-white-700 dark:border-green-800 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="**********" />
   </div>
 <div className="text-center">
-<button type="submit" className="text-white  bg-green-500 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm  sm:w-auto px-5 py-2.5 text-center dark:bg-green-500-600 dark:bg-green-500 dark:focus:ring-green-500 ">Update</button>
+<button type="button" onClick={handleUpdate} className="text-white  bg-green-500 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm  sm:w-auto px-5 py-2.5 text-center dark:bg-green-500-600 dark:bg-green-500 dark:focus:ring-green-500 ">Update</button>
 
 </div>
   
