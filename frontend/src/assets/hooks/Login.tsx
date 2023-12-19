@@ -112,15 +112,21 @@ export const LoginHook = ()=>{
                                 theme: "colored",
                                 onClose :()=>{
                                     
-                                    setTimeout(()=>{navigate('/')},2000)
+                                    setTimeout(()=>{
+                                      console.log('timeout function works')
+
+                                      //save the username tokens in the local storage,
+
+                                      localStorage.setItem('accessToken',userDetails.access)
+                                      localStorage.setItem('refreshToken',userDetails.refresh)
+                                      localStorage.setItem('user',userDetails.username)
+                                      
+                                      navigate('/')
+                                  },2000)
                                 }
                               });
 
-                         //save the username tokens in the local storage,
-
-                         localStorage.setItem('accessToken',userDetails.access)
-                         localStorage.setItem('refreshToken',userDetails.refresh)
-                         localStorage.setItem('user',userDetails.username)
+                         
                          
 
                         }else{

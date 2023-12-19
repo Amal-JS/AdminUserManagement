@@ -94,6 +94,17 @@ if (('user' in localStorage) || ('Adminuser' in localStorage)){
                 Login
               </button>
             </div>
+            <div className=" flex mt-6 items-center">
+              <p className="text-sm text-black underline mx-3">Don't have an account??</p>
+              <button
+                type="button"
+                onClick={()=>{navigate('/userSignUp')}}
+                className="text-white  bg-blue-500 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm  sm:w-auto px-5 py-2.5 text-center dark:bg-green-500-600 dark:bg-blue-500 dark:focus:ring-green-500 "
+              >
+                
+                Sign Up
+              </button>
+            </div>
           </form>
         </div>
       </div>

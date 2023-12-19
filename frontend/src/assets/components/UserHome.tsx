@@ -59,12 +59,16 @@ export const UserHome = ()=>{
     }
 
     const handleImageClick = ()=>{
-        fileInputRef.current.click()
+        fileInputRef.current?.click()
     }
     const handleImageInput = (evt : React.ChangeEvent<HTMLInputElement> )=>{
-        const selectedFile = evt.target.files[0]
         
         const data = new FormData();
+        let selectedFile;
+  const files = ( evt.target as HTMLInputElement).files
+  if (files){
+    selectedFile = files[0]
+  }
   data.append('user', loggedUser?.username);
   data.append('image', selectedFile);
 
